@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Sistema de diseño @lesterkhaos
+ * Carbón / negro + acento terracota. Modo oscuro forzado.
+ * Variables HSL para que shadcn/ui y Tailwind compartan tokens.
+ */
+
+:root {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+    Georgia, ui-serif, serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  /* Tema oscuro (único tema activo) */
+  --background: 240 6% 5%;
+  --foreground: 32 14% 90%;
+
+  --card: 240 5% 8%;
+  --card-foreground: 32 14% 90%;
+
+  --popover: 240 6% 7%;
+  --popover-foreground: 32 14% 90%;
+
+  --primary: 14 62% 52%;
+  --primary-foreground: 30 30% 96%;
+
+  --secondary: 240 4% 13%;
+  --secondary-foreground: 32 12% 86%;
+
+  --muted: 240 4% 12%;
+  --muted-foreground: 30 6% 58%;
+
+  --accent: 14 40% 22%;
+  --accent-foreground: 30 30% 92%;
+
+  --destructive: 0 60% 45%;
+  --destructive-foreground: 30 30% 96%;
+
+  --border: 240 5% 15%;
+  --input: 240 5% 15%;
+  --ring: 14 62% 52%;
+
+  --radius: 0.75rem;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
+  font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fondo con textura sutil: viñeta + grano para profundidad premium */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      1200px 600px at 80% -10%,
+      hsl(14 62% 52% / 0.07),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at -10% 110%,
+      hsl(12 58% 38% / 0.05),
+      transparent 55%
+    );
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer components {
+  /* Wordmark de marca */
+  .brand-mark {
+    font-family: var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+
+  /* Scrollbar discreta */
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .scroll-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scroll-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border));
+    border-radius: 9999px;
+  }
+
+  /* Realce de tarjeta al pasar el mouse */
+  .card-hover {
+    transition: border-color 0.2s ease, background-color 0.2s ease,
+      transform 0.2s ease;
+  }
+  .card-hover:hover {
+    border-color: hsl(var(--primary) / 0.4);
+    transform: translateY(-1px);
+  }
+
+  /* Línea/etiqueta de sección, mayúsculas con tracking amplio */
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: hsl(var(--muted-foreground));
+  }
+}
+
+/* Asegura que el contenido quede sobre la textura de fondo */
+#app-root {
+  position: relative;
+  z-index: 1;
+}

@@ -9,8 +9,9 @@
  *   KV_REST_API_URL, KV_REST_API_TOKEN
  */
 
-const URL = process.env.KV_REST_API_URL;
-const TOKEN = process.env.KV_REST_API_TOKEN;
+// Acepta los nombres de Vercel KV o de Upstash Redis (según lo que conectes).
+const URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const KEY = "lesterkhaos:state";
 
 export function kvConfigured(): boolean {

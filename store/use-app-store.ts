@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
@@ -295,31 +296,34 @@ async function loadFromCloud(): Promise<void> {
   }
 }
 
-/** Hook para iniciar sincronización periódica (llámalo desde AppShell). */
+/** Hook para iniciar sincronización a la nube (solo cuando algo cambia). */
 export function useCloudSync(): void {
-  const { useEffect } = require("react");
   useEffect(() => {
-    // Inicia sincronización cada 5s
+    let ultimo = "";
     const timer = setInterval(() => {
-      const state = useAppStore.getState();
+      const s = useAppStore.getState();
+      const payload = JSON.stringify({
+        ganchos: s.ganchos,
+        metricas: s.metricas,
+        competidores: s.competidores,
+        piezas: s.piezas,
+        tendencias: s.tendencias,
+        ideas: s.ideas,
+        guiones: s.guiones,
+        diagnostico: s.diagnostico,
+        instagram: s.instagram,
+        avatar: s.avatar,
+        playbook: s.playbook,
+      });
+      // Solo manda si cambió desde la última vez (ahorra operaciones).
+      if (payload === ultimo) return;
+      ultimo = payload;
       fetch("/api/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ganchos: state.ganchos,
-          metricas: state.metricas,
-          competidores: state.competidores,
-          piezas: state.piezas,
-          tendencias: state.tendencias,
-          ideas: state.ideas,
-          guiones: state.guiones,
-          diagnostico: state.diagnostico,
-          instagram: state.instagram,
-          avatar: state.avatar,
-          playbook: state.playbook,
-        }),
+        body: payload,
       }).catch(() => {});
-    }, 5000);
+    }, 8000);
     return () => clearInterval(timer);
   }, []);
 }
